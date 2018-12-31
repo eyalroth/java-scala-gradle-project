@@ -1,0 +1,13 @@
+// https://github.com/spring-gradle-plugins/dependency-management-plugin
+apply plugin: "io.spring.dependency-management"
+dependencyManagement {
+    dependencies {
+        dependency group: 'com.google.guava', name: 'guava', version:'27.0-jre'
+
+        dependencySet(group: 'org.junit.jupiter', version: '5.3.2') {
+            entry 'junit-jupiter-api'
+            entry 'junit-jupiter-params'
+            entry 'junit-jupiter-engine'
+        }
+    }
+}

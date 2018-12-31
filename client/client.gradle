@@ -1,4 +1,4 @@
-description = 'server'
+description = 'client'
 dependencies {
     compile group: 'com.google.guava', name: 'guava'
 }
