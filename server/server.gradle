@@ -1,4 +1,7 @@
 description = 'server'
+
 dependencies {
     compile group: 'com.google.guava', name: 'guava'
 }
+
+applyFile("scala")

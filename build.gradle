@@ -17,6 +17,6 @@ configure(this) {
 
 subprojects {
     applyFile("java")
-    applyFile("test")
     applyFile("dependencies")
+    applyFile("test")
 }

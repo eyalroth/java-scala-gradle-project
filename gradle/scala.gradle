@@ -1,0 +1,31 @@
+apply plugin: 'scala'
+
+// A way to make Java code able to import Scala code (doesn't work by default)
+ext.configureSources = { set, name ->
+    set.scala.srcDir("src/$name/java")
+    set.java.srcDirs = []
+}
+configureSources(sourceSets.main, 'main')
+configureSources(sourceSets.test, 'test')
+
+dependencies {
+    compile group: 'org.scala-lang', name: 'scala-library'
+
+    // using "vintage" junit engine (junit 4) since scalatest doesn't support junit 5
+    testRuntime group: 'org.junit.vintage', name: 'junit-vintage-engine'
+    testCompile group: 'org.junit.platform', name: 'junit-platform-runner'
+    testCompile group: 'org.scalatest', name: 'scalatest_2.12'
+
+    // see: https://github.com/typesafehub/zinc/issues/87
+    zinc group: 'com.typesafe.zinc', name: 'zinc', version: '0.3.15'
+    zinc group: 'org.scala-lang', name: 'scala-library', version: '2.10.5'
+}
+
+gradle.projectsEvaluated {
+
+    tasks.withType(Test) { task ->
+        include '**/*Suite.class'
+        include '**/*Spec.class'
+        include '**/*Specs.class'
+    }
+}

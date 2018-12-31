@@ -1,18 +1,8 @@
-dependencies {
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params'
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
-}
-
 gradle.projectsEvaluated {
-
     tasks.withType(Test) { task ->
-        useJUnitPlatform() // only needed with JUnit 5
+        useJUnitPlatform()
 
         systemProperty "file.encoding", "utf-8"
         systemProperty "user.timezone", "UTC"
-
-        include '**/*Test.class'
-        include '**/*Tests.class'
     }
 }
