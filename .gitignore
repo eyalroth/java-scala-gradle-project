@@ -1,6 +1,8 @@
 # gradle
 .gradle
 /build
+gradlew*
+gradle/wrapper/
 
 # idea
 .idea
