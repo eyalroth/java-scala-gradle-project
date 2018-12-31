@@ -1,0 +1,11 @@
+// https://github.com/passy/build-time-tracker-plugin
+apply plugin: "build-time-tracker"
+buildtimetracker {
+    reporters {
+        summary {
+            ordered true
+            shortenTaskNames false
+            barstyle 'ascii'
+        }
+    }
+}

@@ -3,6 +3,7 @@
 build/
 gradlew*
 gradle/wrapper/
+reports/
 
 # idea
 .idea
