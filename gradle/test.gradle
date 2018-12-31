@@ -1,0 +1,18 @@
+dependencies {
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
+}
+
+gradle.projectsEvaluated {
+
+    tasks.withType(Test) { task ->
+        useJUnitPlatform() // only needed with JUnit 5
+
+        systemProperty "file.encoding", "utf-8"
+        systemProperty "user.timezone", "UTC"
+
+        include '**/*Test.class'
+        include '**/*Tests.class'
+    }
+}

@@ -2,6 +2,11 @@ wrapper {
     gradleVersion = '5.0'
 }
 
-repositories {
-    jcenter()
+allprojects {
+    apply from: new File(rootProject.projectDir, 'gradle/base.gradle')
+}
+
+subprojects {
+    applyFile("java")
+    applyFile("test")
 }
