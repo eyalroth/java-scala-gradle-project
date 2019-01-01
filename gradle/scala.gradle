@@ -24,8 +24,6 @@ dependencies {
 gradle.projectsEvaluated {
 
     tasks.withType(Test) { task ->
-        include '**/*Suite.class'
-        include '**/*Spec.class'
-        include '**/*Specs.class'
+        include '**/ServerSuite.class'
     }
 }
