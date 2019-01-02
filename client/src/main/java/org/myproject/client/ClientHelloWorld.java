@@ -1,9 +1,11 @@
 package org.myproject.client;
 
+import org.myproject.common.Printer;
+
 public class ClientHelloWorld {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello world!");
+        new Printer().print("Hello world!");
     }
 }

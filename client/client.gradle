@@ -1,4 +1,5 @@
 description = 'client'
 dependencies {
+    compile project(":common")
     compile group: 'com.google.guava', name: 'guava'
 }

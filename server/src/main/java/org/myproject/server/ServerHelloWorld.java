@@ -1,9 +1,11 @@
 package org.myproject.server;
 
+import org.myproject.common.Printer;
+
 public class ServerHelloWorld {
 
     public static void main(String[] args) {
 
-        System.out.println(new Greeter().greet(new World()));
+        new Printer().print(new Greeter().greet(new World()));
     }
 }
