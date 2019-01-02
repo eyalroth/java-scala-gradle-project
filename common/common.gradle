@@ -1,1 +1,23 @@
 description = 'common'
+
+applyFile('scala')
+
+configurations {
+    testUtilsCompile
+}
+
+dependencies {
+
+    testUtilsCompile sourceSets.main.runtimeClasspath
+    testUtilsCompile group: 'org.junit.platform', name: 'junit-platform-runner'
+    testUtilsCompile group: 'org.scalatest', name: 'scalatest_2.12'
+}
+
+sourceSets {
+    testUtils {
+        scala {
+            srcDir "src/test-utils/scala"
+        }
+        compileClasspath += configurations.testUtilsCompile
+    }
+}

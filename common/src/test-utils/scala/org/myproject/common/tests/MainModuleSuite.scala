@@ -1,17 +1,14 @@
-package org.myproject.server
+package org.myproject.common.tests
 
 import java.util.function.Predicate
 
 import org.junit.platform.commons.util.{ClassFilter, ReflectionUtils}
-import org.junit.runner.RunWith
 import org.scalatest.Suite
-import org.scalatest.junit.JUnitRunner
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-@RunWith(classOf[JUnitRunner])
-class ServerSuite extends Suite {
+trait MainModuleSuite extends Suite {
 
   override lazy val nestedSuites: collection.immutable.IndexedSeq[Suite] = {
 

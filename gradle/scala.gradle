@@ -13,7 +13,6 @@ dependencies {
 
     // using "vintage" junit engine (junit 4) since scalatest doesn't support junit 5
     testRuntime group: 'org.junit.vintage', name: 'junit-vintage-engine'
-    testCompile group: 'org.junit.platform', name: 'junit-platform-runner'
     testCompile group: 'org.scalatest', name: 'scalatest_2.12'
 
     // see: https://github.com/typesafehub/zinc/issues/87
@@ -24,6 +23,6 @@ dependencies {
 gradle.projectsEvaluated {
 
     tasks.withType(Test) { task ->
-        include '**/ServerSuite.class'
+        include '**/*ModuleSuite.class'
     }
 }

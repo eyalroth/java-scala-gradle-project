@@ -4,5 +4,9 @@ gradle.projectsEvaluated {
 
         systemProperty "file.encoding", "utf-8"
         systemProperty "user.timezone", "UTC"
+
+        dependencies {
+            testCompile project(":common").sourceSets.testUtils.runtimeClasspath
+        }
     }
 }
