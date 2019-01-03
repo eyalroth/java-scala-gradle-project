@@ -1,0 +1,22 @@
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+ext.configureApp = { archiveBaseName, mainClass ->
+
+    mainClassName = mainClass
+
+    shadowJar {
+        archiveName = "${archiveBaseName}.jar"
+    }
+
+    shadowDistZip {
+        baseName = archiveBaseName
+    }
+    shadowDistTar {
+        baseName = archiveBaseName
+    }
+
+    def distTask = tasks.create(name: 'shadowDist')
+    distTask.dependsOn(shadowDistZip)
+    distTask.dependsOn(shadowDistTar)
+}

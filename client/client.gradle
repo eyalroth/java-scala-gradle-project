@@ -3,3 +3,6 @@ dependencies {
     compile project(":common")
     compile group: 'com.google.guava', name: 'guava'
 }
+
+applyFile("app")
+configureApp('client', 'org.myproject.client.ClientHelloWorld')

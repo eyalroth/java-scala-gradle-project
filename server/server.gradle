@@ -6,3 +6,6 @@ dependencies {
 }
 
 applyFile("scala")
+
+applyFile("app")
+configureApp('server', 'org.myproject.server.ServerHelloWorld')

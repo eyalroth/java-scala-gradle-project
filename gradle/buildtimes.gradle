@@ -1,4 +1,3 @@
-// https://github.com/passy/build-time-tracker-plugin
 apply plugin: "build-time-tracker"
 buildtimetracker {
     reporters {
