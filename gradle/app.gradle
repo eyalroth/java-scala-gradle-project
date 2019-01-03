@@ -1,5 +1,10 @@
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "com.palantir.git-version"
 
 ext.configureApp = { archiveBaseName, mainClass ->
 
@@ -7,6 +12,22 @@ ext.configureApp = { archiveBaseName, mainClass ->
 
     shadowJar {
         archiveName = "${archiveBaseName}.jar"
+
+        def buildNumber = {
+            if (System.env.containsKey("BUILD_NUMBER")) System.env.get("BUILD_NUMBER") else "unspecified"
+        }()
+
+        def buildDate = DateTimeFormatter.ofPattern("dd MMM uuuu").format(LocalDate.now(ZoneId.of("UTC")))
+
+        def customManifestSection = "Build-Details"
+
+        manifest {
+            attributes "Specification-Version": project.version.toString()
+            attributes "Implementation-Version": buildNumber
+
+            attributes "Implementation-Date": buildDate, customManifestSection
+            attributes "Implementation-Revision": versionDetails().gitHash, customManifestSection
+        }
     }
 
     shadowDistZip {
