@@ -20,12 +20,31 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.getAllSource()
 }
 
+task docsJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+docsJar.dependsOn(javadoc)
+
+pluginManager.withPlugin('scala') {
+
+    javadoc {
+        enabled = false
+    }
+
+    docsJar {
+        from scaladoc.destinationDir
+    }
+    docsJar.dependsOn(scaladoc)
+}
+
 publishing {
     publications {
         api(MavenPublication) {
             from components.java
 
             artifact sourcesJar
+            artifact docsJar
         }
     }
 }
