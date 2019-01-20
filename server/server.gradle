@@ -1,8 +1,10 @@
 description = 'server'
 
+applyFile("publish")
+
 dependencies {
-    compile project(":common")
-    compile group: 'com.google.guava', name: 'guava'
+    api project(":common")
+    implementation group: 'com.google.guava', name: 'guava'
 }
 
 applyFile("scala")
