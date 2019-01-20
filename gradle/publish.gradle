@@ -15,14 +15,23 @@ artifactory {
     }
 }
 
+ext.excluded = ['secret.txt']
+
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    exclude excluded
+}
+
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.getAllSource()
+    exclude excluded
 }
 
 task docsJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+    exclude excluded
 }
 docsJar.dependsOn(javadoc)
 
@@ -39,16 +48,55 @@ pluginManager.withPlugin('scala') {
 }
 
 publishing {
+
+    def configurePom = { publication ->
+        configure(publication) {
+            pom.withXml {
+                def rootNode = asNode()
+
+                def allDependencies = project.configurations.runtime.allDependencies +
+                        project.configurations.api.allDependencies
+                def dependenciesNode = rootNode.appendNode("dependencies")
+
+
+                // this adds inner-project dependencies to the published POM, since `artifact apiJar` doesn't do that.
+                // this could usually be achieved with `from components.java`, but that would include ALL files,
+                // including sensitive resources files which you may want to exclude via `artifact apiJar`.
+                // see https://stackoverflow.com/a/53486063/114626
+                allDependencies.forEach { d ->
+
+                    def dependencyNode = dependenciesNode.appendNode("dependency")
+                    dependencyNode.appendNode("groupId", d.group)
+                    dependencyNode.appendNode("artifactId", d.name)
+                    def version = {
+                        if (d.version != null) d.version
+                        else dependencyManagement.managedVersions["${d.group}:${d.name}"]
+                    }
+                    dependencyNode.appendNode("version", version())
+                }
+
+
+                // remove the "dependencyManagement" node as it is irrelevant in the published POM
+                rootNode.getByName("dependencyManagement").forEach { node ->
+                    rootNode.remove(node)
+                }
+            }
+        }
+    }
+
     publications {
         api(MavenPublication) {
-            from components.java
-
+            artifact apiJar
             artifact sourcesJar
             artifact docsJar
         }
+        configurePom(api)
     }
 }
+
 
 artifactoryPublish {
     publications('api')
 }
+
+
