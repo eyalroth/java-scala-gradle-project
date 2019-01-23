@@ -4,6 +4,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.3' apply false // https://github.com/johnrengelman/shadow
     id "com.palantir.git-version" version "0.10.0" apply false // https://github.com/palantir/gradle-git-version
     id "com.jfrog.artifactory" version "4.8.1" apply false
+    id "org.scoverage" version "2.5.0" apply false // https://github.com/scoverage/gradle-scoverage
 }
 
 wrapper {
@@ -16,6 +17,14 @@ allprojects {
 
 configure(this) {
     applyFile("buildtimes")
+
+    applyFile("scoverage")
+    // this line must be here (and not in `scoverage.gradle`) due to classpath problems with the scoverage plugin
+    task aggregateScoverage(type: org.scoverage.ScoverageAggregate)
+    checkScoverage {
+        reportDir = file("$buildDir/scoverage-aggregate")
+        minimumRate = 0.75
+    }
 }
 
 subprojects {
