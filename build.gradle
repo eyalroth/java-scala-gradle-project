@@ -5,6 +5,7 @@ plugins {
     id "com.palantir.git-version" version "0.10.0" apply false // https://github.com/palantir/gradle-git-version
     id "com.jfrog.artifactory" version "4.8.1" apply false
     id "org.scoverage" version "2.5.0" apply false // https://github.com/scoverage/gradle-scoverage
+    id "net.saliman.cobertura" version "2.6.0" apply false // https://github.com/stevesaliman/gradle-cobertura-plugin
 }
 
 wrapper {
@@ -24,6 +25,16 @@ configure(this) {
     checkScoverage {
         reportDir = file("$buildDir/scoverage-aggregate")
         minimumRate = 0.75
+    }
+
+    applyFile("cobertura")
+
+    gradle.projectsEvaluated {
+        def testCoverageTask = tasks.create(name: "testCoverage")
+        testCoverageTask.dependsOn(project.tasks.cobertura)
+        def reportScoverageTasks = subprojects.collect { p -> p.tasks.matching { t -> t.name == "reportScoverage" } }
+        aggregateScoverage.dependsOn(reportScoverageTasks)
+        testCoverageTask.dependsOn(aggregateScoverage)
     }
 }
 

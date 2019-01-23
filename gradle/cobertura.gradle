@@ -1,0 +1,66 @@
+import static groovy.io.FileType.FILES
+
+allprojects {
+    apply plugin: 'net.saliman.cobertura'
+
+    cobertura {
+        coverageEncoding = "UTF-8"
+    }
+}
+
+subprojects {
+
+    dependencies {
+        // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
+        testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
+    }
+
+    pluginManager.withPlugin('scala') {
+
+        cobertura {
+            // by default, cobertura looks only for the "java" output directory (missing "scala")
+            coverageDirs = [sourceSets.main.output.classesDirs]
+
+            // by default, cobertura will run 'testScoverage' as well (we only want 'test')
+            coverageTestTasks {
+                project.tasks.matching {
+                    it.name == "test"
+                }
+            }
+            coverageIncludes = []
+        }
+
+        // otherwise, cobertura will try to instrument scala classes (those are covered by scoverage)
+        project.afterEvaluate {
+
+            // include only java classes
+            files(sourceSets.main.scala.srcDirs).each { dir ->
+                dir.eachFileRecurse(FILES) { f ->
+                    if (f.name.endsWith('.java')) {
+                        def relativePath = dir.relativePath(f).replace('/', '\\.')
+                        def regex = ".*" + relativePath.take(relativePath.lastIndexOf('.'))
+                        cobertura.coverageIncludes << regex
+                    }
+                }
+            }
+
+            // if there are no java classes, exclude everything (because empty "include" means including everything)
+            cobertura {
+                if (coverageIncludes.size == 0) {
+                    coverageExcludes = [".*"]
+                }
+            }
+        }
+    }
+}
+
+// taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10
+def files = subprojects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
+cobertura {
+    coverageFormats = ['xml', 'html']
+    coverageSourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+    coverageMergeDatafiles = files
+}
+test.dependsOn(subprojects.test)
+
+
