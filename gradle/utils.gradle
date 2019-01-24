@@ -1,0 +1,29 @@
+import static groovy.io.FileType.FILES
+
+ext.findFiles = { dir, condition ->
+
+    def files = []
+
+    if (dir.exists()) {
+        dir.eachFileRecurse(FILES) { f ->
+            if (condition == null || condition(f)) {
+                def relativePath = dir.relativePath(f)
+                files << relativePath
+            }
+        }
+    }
+
+    return files
+}
+
+ext.findJavaFiles = { project ->
+
+    def javaFiles = []
+
+    files(project.sourceSets.main.getAllSource().srcDirs).each { dir ->
+        javaFiles += findFiles(dir, {f -> f.name.endsWith('.java')})
+    }
+
+    return javaFiles
+}
+

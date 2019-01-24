@@ -1,4 +1,4 @@
-import static groovy.io.FileType.FILES
+import java.nio.file.Files
 
 apply plugin: 'net.saliman.cobertura'
 
@@ -17,36 +17,50 @@ if (project != rootProject) {
         cobertura {
             // by default, cobertura looks only for the "java" output directory (missing "scala")
             coverageDirs = [sourceSets.main.output.classesDirs]
-
-            // by default, cobertura will run 'testScoverage' as well (we only want 'test')
-            coverageTestTasks {
-                project.tasks.matching {
-                    it.name == "test"
-                }
-            }
-            coverageIncludes = []
         }
 
-        // otherwise, cobertura will try to instrument scala classes (those are covered by scoverage)
         project.afterEvaluate {
 
+            applyFile("utils")
+
+            def javaFiles = findJavaFiles(project)
+
+            def includedClasses = javaFiles.collect { path ->
+                ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.')
+            }
+
             // include only java classes
-            files(sourceSets.main.scala.srcDirs).each { dir ->
-                dir.eachFileRecurse(FILES) { f ->
-                    if (f.name.endsWith('.java')) {
-                        def relativePath = dir.relativePath(f).replace('/', '\\.')
-                        def regex = ".*" + relativePath.take(relativePath.lastIndexOf('.'))
-                        cobertura.coverageIncludes << regex
+            cobertura {
+                if (includedClasses.size == 0) {
+                    coverageExcludes = [".*"]
+                } else {
+                    coverageIncludes = includedClasses
+                }
+            }
+
+            // delete all the non java classes after the instrumentation task (since they are not really instrumented)
+            task deleteNonJavaInstrumentedClasses {
+
+                doLast {
+                    def javaClassesFiles = javaFiles.collect {
+                        path -> path.replace(".java", ".class")
+                    }
+
+                    def instrumentionDir = instrument.outputClassesDir
+
+                    def nonJavaClassesFiles = findFiles(instrumentionDir, { f ->
+                        def relativePath = instrumentionDir.relativePath(f)
+                        !javaClassesFiles.contains(relativePath)
+                    })
+
+                    nonJavaClassesFiles.each { f ->
+                        Files.deleteIfExists(instrumentionDir.toPath().resolve(f))
                     }
                 }
             }
-
-            // if there are no java classes, exclude everything (because empty "include" means including everything)
-            cobertura {
-                if (coverageIncludes.size == 0) {
-                    coverageExcludes = [".*"]
-                }
-            }
+            deleteNonJavaInstrumentedClasses.dependsOn(instrument)
+            coberturaReport.dependsOn(deleteNonJavaInstrumentedClasses)
+            test.mustRunAfter(deleteNonJavaInstrumentedClasses)
         }
     }
 }

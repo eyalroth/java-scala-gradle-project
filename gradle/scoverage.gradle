@@ -3,9 +3,57 @@
 // otherwise "reportScoverage" might fail due to a bug in scoverage which causes problems with encoding
 // See https://github.com/scoverage/gradle-scoverage/issues/68
 
+import java.nio.file.Files
+
 apply plugin: "org.scoverage"
 
 dependencies {
     scoverage group: 'org.scoverage', name: 'scalac-scoverage-plugin_2.12', version: '1.3.1'
     scoverage group: 'org.scoverage', name: 'scalac-scoverage-runtime_2.12', version: '1.3.1'
+}
+
+if (project != rootProject) {
+    project.afterEvaluate {
+        scoverage {
+            excludedFiles = ["*\\.java"]
+        }
+
+        testScoverage {
+            enabled = false
+        }
+
+        // delete all java classes after the instrumentation by scoverage (since they are not really instrumented)
+        task deleteJavaInstrumentedClasses {
+
+            doLast {
+                applyFile("utils")
+
+                def javaClassesFiles = findJavaFiles(project).collect {
+                    path -> path.replace(".java", ".class")
+                }
+
+                def instrumentionDirs = project.sourceSets.scoverage.output.files
+
+                javaClassesFiles.each { f ->
+                    instrumentionDirs.each { d ->
+                        Files.deleteIfExists(d.toPath().resolve(f))
+                    }
+                }
+            }
+        }
+        deleteJavaInstrumentedClasses.dependsOn(compileScoverageScala)
+        reportScoverage.dependsOn(deleteJavaInstrumentedClasses)
+        reportScoverage.dependsOn(test)
+        test.mustRunAfter(deleteJavaInstrumentedClasses)
+
+        // we only want to alter 'test' task classpath if scoverage is requested to be executed
+        gradle.taskGraph.whenReady { graph ->
+            if (graph.hasTask(reportScoverage)) {
+                test {
+                    outputs.upToDateWhen { false }
+                    classpath = testScoverage.classpath + test.classpath
+                }
+            }
+        }
+    }
 }
