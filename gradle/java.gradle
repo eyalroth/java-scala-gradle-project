@@ -20,3 +20,5 @@ gradle.projectsEvaluated {
         include '**/*Tests.class'
     }
 }
+
+applyFile("cobertura")

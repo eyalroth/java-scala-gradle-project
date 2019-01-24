@@ -19,23 +19,9 @@ allprojects {
 configure(this) {
     applyFile("buildtimes")
 
-    applyFile("scoverage")
-    // this line must be here (and not in `scoverage.gradle`) due to classpath problems with the scoverage plugin
+    applyFile("coverage")
+    // this line has to be here due to a bug (https://github.com/scoverage/gradle-scoverage/issues/87)
     task aggregateScoverage(type: org.scoverage.ScoverageAggregate)
-    checkScoverage {
-        reportDir = file("$buildDir/scoverage-aggregate")
-        minimumRate = 0.75
-    }
-
-    applyFile("cobertura")
-
-    gradle.projectsEvaluated {
-        def testCoverageTask = tasks.create(name: "testCoverage")
-        testCoverageTask.dependsOn(project.tasks.cobertura)
-        def reportScoverageTasks = subprojects.collect { p -> p.tasks.matching { t -> t.name == "reportScoverage" } }
-        aggregateScoverage.dependsOn(reportScoverageTasks)
-        testCoverageTask.dependsOn(aggregateScoverage)
-    }
 }
 
 subprojects {

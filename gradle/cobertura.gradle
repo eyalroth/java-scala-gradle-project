@@ -1,20 +1,17 @@
 import static groovy.io.FileType.FILES
 
-allprojects {
-    apply plugin: 'net.saliman.cobertura'
+apply plugin: 'net.saliman.cobertura'
 
-    cobertura {
-        coverageEncoding = "UTF-8"
-    }
+cobertura {
+    coverageEncoding = "UTF-8"
 }
 
-subprojects {
+dependencies {
+    // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
+    testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
+}
 
-    dependencies {
-        // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
-        testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
-    }
-
+if (project != rootProject) {
     pluginManager.withPlugin('scala') {
 
         cobertura {
@@ -54,13 +51,5 @@ subprojects {
     }
 }
 
-// taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10
-def files = subprojects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
-cobertura {
-    coverageFormats = ['xml', 'html']
-    coverageSourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
-    coverageMergeDatafiles = files
-}
-test.dependsOn(subprojects.test)
 
 

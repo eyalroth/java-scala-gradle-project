@@ -1,0 +1,36 @@
+applyFile("scoverage")
+applyFile("cobertura")
+
+gradle.projectsEvaluated {
+
+    /* --- scoverage aggregation --- */
+
+    def scoverageReportDir = file("$buildDir/reports/scoverage")
+
+    aggregateScoverage {
+        reportDir = scoverageReportDir
+    }
+    checkScoverage {
+        reportDir = scoverageReportDir
+        minimumRate = 0.75
+    }
+    def reportScoverageTasks = subprojects.collect { p -> p.tasks.matching { t -> t.name == "reportScoverage" } }
+    aggregateScoverage.dependsOn(reportScoverageTasks)
+
+    /* --- cobertura aggregation --- */
+
+    // taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10
+    def files = subprojects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
+    cobertura {
+        coverageFormats = ['xml', 'html']
+        coverageSourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+        coverageMergeDatafiles = files
+    }
+    test.dependsOn(subprojects.test)
+
+    /* --- total aggregation --- */
+
+    task testCoverage(type: GradleBuild) {
+        tasks = ['cobertura', 'aggregateScoverage']
+    }
+}
