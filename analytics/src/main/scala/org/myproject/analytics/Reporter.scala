@@ -14,6 +14,15 @@ class Reporter {
 
     Report(id, count)
   }
+
+  class InnerReporter {
+
+    def lala(): Unit = {
+
+      val x = 1 + 1
+      x
+    }
+  }
 }
 
 case class Report(id: Long, count: Int)

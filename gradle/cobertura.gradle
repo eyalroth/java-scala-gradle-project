@@ -1,5 +1,3 @@
-import java.nio.file.Files
-
 apply plugin: 'net.saliman.cobertura'
 
 cobertura {
@@ -26,7 +24,7 @@ if (project != rootProject) {
             def javaFiles = findJavaFiles(project)
 
             def includedClasses = javaFiles.collect { path ->
-                ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.')
+                ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
             }
 
             // include only java classes
@@ -38,29 +36,17 @@ if (project != rootProject) {
                 }
             }
 
-            // delete all the non java classes after the instrumentation task (since they are not really instrumented)
-            task deleteNonJavaInstrumentedClasses {
-
+            // delete all classes not actually instrumented by cobertura after the instrumentation task
+            task deleteNonCoberturaInstrumentedClasses {
                 doLast {
-                    def javaClassesFiles = javaFiles.collect {
-                        path -> path.replace(".java", ".class")
-                    }
-
+                    def classesDir = sourceSets.main.scala.outputDir
                     def instrumentionDir = instrument.outputClassesDir
-
-                    def nonJavaClassesFiles = findFiles(instrumentionDir, { f ->
-                        def relativePath = instrumentionDir.relativePath(f)
-                        !javaClassesFiles.contains(relativePath)
-                    })
-
-                    nonJavaClassesFiles.each { f ->
-                        Files.deleteIfExists(instrumentionDir.toPath().resolve(f))
-                    }
+                    deleteSameFiles(classesDir, instrumentionDir)
                 }
             }
-            deleteNonJavaInstrumentedClasses.dependsOn(instrument)
-            coberturaReport.dependsOn(deleteNonJavaInstrumentedClasses)
-            test.mustRunAfter(deleteNonJavaInstrumentedClasses)
+            deleteNonCoberturaInstrumentedClasses.dependsOn(instrument)
+            coberturaReport.dependsOn(deleteNonCoberturaInstrumentedClasses)
+            test.mustRunAfter(deleteNonCoberturaInstrumentedClasses)
         }
     }
 }

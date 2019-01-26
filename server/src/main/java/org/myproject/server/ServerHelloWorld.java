@@ -21,4 +21,20 @@ public class ServerHelloWorld {
         }
 
     }
+
+    public static Runnable dummyLambda = () -> {
+
+            int i = 1 + 11;
+            int j = i + 2;
+    };
+
+    public static class DummyInnerClass {
+
+        public int foo() {
+
+            int i = 1 + 3;
+            int j = i + 5;
+            return i + j;
+        }
+    }
 }

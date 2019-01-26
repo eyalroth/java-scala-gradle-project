@@ -2,6 +2,10 @@ ext.applyFile = { name ->
     apply from: new File(rootProject.projectDir, "gradle/${name}.gradle")
 }
 
-repositories {
-    jcenter()
+ext.configureRepositories = { obj ->
+    configure(obj) {
+        repositories {
+            jcenter()
+        }
+    }
 }
