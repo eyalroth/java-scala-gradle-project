@@ -1,0 +1,11 @@
+description = 'analytics'
+
+dependencies {
+    compile project(":common")
+    compile group: 'io.spray', name: 'spray-json_2.12'
+}
+
+applyFile("scala")
+
+applyFile("app")
+configureApp('server', 'org.myproject.analytics.AnalyticsHelloWorld')
