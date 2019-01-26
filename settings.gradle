@@ -5,7 +5,7 @@ include 'client'
 include 'common'
 include 'analytics'
 
-// Makes every sub-project have its build.gradle named after the its name
+// Makes every sub-project have its `build.gradle` named after its name
 ext.configureSubProject = { project ->
     project.buildFileName = "${project.name}.gradle"
     project.children.each(configureSubProject)

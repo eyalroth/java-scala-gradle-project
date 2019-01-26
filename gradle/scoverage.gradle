@@ -40,7 +40,6 @@ if (project != rootProject) {
         gradle.taskGraph.whenReady { graph ->
             if (graph.hasTask(reportScoverage)) {
                 test {
-                    outputs.upToDateWhen { false }
                     classpath = testScoverage.classpath + test.classpath
                 }
             }

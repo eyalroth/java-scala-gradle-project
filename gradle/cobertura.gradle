@@ -1,5 +1,7 @@
 apply plugin: 'net.saliman.cobertura'
 
+applyFile("utils")
+
 cobertura {
     coverageEncoding = "UTF-8"
 }
@@ -22,22 +24,21 @@ if (project != rootProject) {
 
         project.afterEvaluate {
 
-            applyFile("utils")
+            // cobertura doesn't support including / excluding according to source files
+            def includeOnlyJavaFiles = {
+                def includedClasses = findJavaFiles(project).collect { path ->
+                    ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
+                }
 
-            def javaFiles = findJavaFiles(project)
-
-            def includedClasses = javaFiles.collect { path ->
-                ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
-            }
-
-            // include only java classes
-            cobertura {
-                if (includedClasses.size == 0) {
-                    coverageExcludes = [".*"]
-                } else {
-                    coverageIncludes = includedClasses
+                cobertura {
+                    if (includedClasses.size == 0) {
+                        coverageExcludes = [".*"]
+                    } else {
+                        coverageIncludes = includedClasses
+                    }
                 }
             }
+            includeOnlyJavaFiles()
 
             // delete all classes not actually instrumented by cobertura after the instrumentation task
             task deleteNonCoberturaInstrumentedClasses {
