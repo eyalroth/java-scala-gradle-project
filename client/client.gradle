@@ -1,4 +1,4 @@
-description = 'client'
+description = 'client - a java only module'
 dependencies {
     compile project(":common")
     compile group: 'com.google.guava', name: 'guava'

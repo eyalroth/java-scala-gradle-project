@@ -1,4 +1,4 @@
-description = 'server'
+description = 'server - a mixed scala / java module'
 
 applyFile("publish")
 

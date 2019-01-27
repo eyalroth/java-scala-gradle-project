@@ -1,4 +1,4 @@
-description = 'analytics'
+description = 'analytics - a scala only module'
 
 dependencies {
     compile project(":common")
@@ -8,4 +8,4 @@ dependencies {
 applyFile("scala")
 
 applyFile("app")
-configureApp('server', 'org.myproject.analytics.AnalyticsHelloWorld')
+configureApp('analytics', 'org.myproject.analytics.AnalyticsHelloWorld')

@@ -1,4 +1,4 @@
-description = 'common'
+description = 'common - the common module for all the others'
 
 applyFile('scala')
 
