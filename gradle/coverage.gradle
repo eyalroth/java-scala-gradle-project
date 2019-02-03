@@ -3,20 +3,6 @@ applyFile("cobertura")
 
 gradle.projectsEvaluated {
 
-    /* --- scoverage aggregation --- */
-
-    def scoverageReportDir = file("$buildDir/reports/scoverage")
-
-    aggregateScoverage {
-        reportDir = scoverageReportDir
-    }
-    checkScoverage {
-        reportDir = scoverageReportDir
-        minimumRate = 0.75
-    }
-    def reportScoverageTasks = subprojects.collect { p -> p.tasks.matching { t -> t.name == "reportScoverage" } }
-    aggregateScoverage.dependsOn(reportScoverageTasks)
-
     /* --- cobertura aggregation --- */
 
     // taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10

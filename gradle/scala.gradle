@@ -9,7 +9,6 @@ configureSources(sourceSets.main, 'main')
 configureSources(sourceSets.test, 'test')
 
 applyFile("scoverage")
-configureSources(sourceSets.scoverage, 'main')
 
 dependencies {
     compile group: 'org.scala-lang', name: 'scala-library'
