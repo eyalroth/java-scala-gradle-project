@@ -17,9 +17,6 @@ if (project != rootProject) {
         cobertura {
             // by default, cobertura looks only for the "java" output directory (missing "scala")
             coverageDirs = [sourceSets.main.output.classesDirs]
-            coverageTestTasks {
-                tasks.withType(Test).matching { it.name != "testScoverage"}
-            }
         }
 
         project.afterEvaluate {
