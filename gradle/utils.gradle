@@ -1,16 +1,3 @@
-buildscript {
-    configureRepositories(buildscript)
-
-    dependencies {
-        classpath group: 'commons-io', name: 'commons-io', version: '2.6'
-    }
-}
-
-
-import org.apache.commons.io.FileUtils
-
-import java.nio.file.Files
-
 import static groovy.io.FileType.FILES
 
 ext.findFiles = { dir, condition = null ->
@@ -38,23 +25,4 @@ ext.findJavaFiles = { project ->
     }
 
     return javaFiles
-}
-
-ext.isSameFile = { dirA, dirB, relativePath ->
-    def fileA = new File(dirA, relativePath)
-    def fileB = new File(dirB, relativePath)
-    return FileUtils.contentEquals(fileA, fileB)
-}
-
-ext.deleteSameFiles = { inputDir, outputDir ->
-
-    def inputFiles = findFiles(inputDir)
-    def identicalFiles = findFiles(outputDir, { f ->
-        def relativePath = outputDir.relativePath(f)
-        inputFiles.contains(relativePath) && isSameFile(inputDir, outputDir, relativePath)
-    })
-
-    identicalFiles.each { f ->
-        Files.deleteIfExists(outputDir.toPath().resolve(f))
-    }
 }

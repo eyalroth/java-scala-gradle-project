@@ -36,18 +36,6 @@ if (project != rootProject) {
                 }
             }
             includeOnlyJavaFiles()
-
-            // delete all classes not actually instrumented by cobertura after the instrumentation task
-            task deleteNonCoberturaInstrumentedClasses {
-                doLast {
-                    def classesDir = sourceSets.main.scala.outputDir
-                    def instrumentionDir = instrument.outputClassesDir
-                    deleteSameFiles(classesDir, instrumentionDir)
-                }
-            }
-            deleteNonCoberturaInstrumentedClasses.dependsOn(instrument)
-            coberturaReport.dependsOn(deleteNonCoberturaInstrumentedClasses)
-            test.mustRunAfter(deleteNonCoberturaInstrumentedClasses)
         }
     }
 }
