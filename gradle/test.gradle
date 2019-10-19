@@ -6,7 +6,7 @@ gradle.projectsEvaluated {
         systemProperty "user.timezone", "UTC"
 
         dependencies {
-            testCompile project(":common").sourceSets.testUtils.runtimeClasspath
+            testImplementation project(":common").sourceSets.testUtils.runtimeClasspath
         }
     }
 }

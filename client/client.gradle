@@ -1,7 +1,7 @@
 description = 'client - a java only module'
 dependencies {
-    compile project(":common")
-    compile group: 'com.google.guava', name: 'guava'
+    implementation project(":common")
+    implementation group: 'com.google.guava', name: 'guava'
 }
 
 applyFile("app")

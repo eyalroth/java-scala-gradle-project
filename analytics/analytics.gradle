@@ -1,8 +1,8 @@
 description = 'analytics - a scala only module'
 
 dependencies {
-    compile project(":common")
-    compile group: 'io.spray', name: 'spray-json_2.12'
+    implementation project(":common")
+    implementation group: 'io.spray', name: 'spray-json_2.12'
 }
 
 applyFile("scala")

@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -8,9 +8,9 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params'
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+    testCompileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+    testCompileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
 }
 
 gradle.projectsEvaluated {
