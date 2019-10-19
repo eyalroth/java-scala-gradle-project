@@ -3,7 +3,7 @@ description = 'server - a mixed scala / java module'
 applyFile("publish")
 
 dependencies {
-    api project(":common")
+    implementation project(":common")
     implementation group: 'com.google.guava', name: 'guava'
 }
 

@@ -1,44 +1,44 @@
-apply plugin: 'net.saliman.cobertura'
-
-applyFile("utils")
-
-cobertura {
-    coverageEncoding = "UTF-8"
-}
-
-dependencies {
-    // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
-    testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
-}
-
-if (project != rootProject) {
-    pluginManager.withPlugin('scala') {
-
-        cobertura {
-            // by default, cobertura looks only for the "java" output directory (missing "scala")
-            coverageDirs = [sourceSets.main.output.classesDirs]
-        }
-
-        project.afterEvaluate {
-
-            // cobertura doesn't support including / excluding according to source files
-            def includeOnlyJavaFiles = {
-                def includedClasses = findJavaFiles(project).collect { path ->
-                    ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
-                }
-
-                cobertura {
-                    if (includedClasses.size == 0) {
-                        coverageExcludes = [".*"]
-                    } else {
-                        coverageIncludes = includedClasses
-                    }
-                }
-            }
-            includeOnlyJavaFiles()
-        }
-    }
-}
-
-
-
+//apply plugin: 'net.saliman.cobertura'
+//
+//applyFile("utils")
+//
+//cobertura {
+//    coverageEncoding = "UTF-8"
+//}
+//
+//dependencies {
+//    // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
+//    testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
+//}
+//
+//if (project != rootProject) {
+//    pluginManager.withPlugin('scala') {
+//
+//        cobertura {
+//            // by default, cobertura looks only for the "java" output directory (missing "scala")
+//            coverageDirs = [sourceSets.main.output.classesDirs]
+//        }
+//
+//        project.afterEvaluate {
+//
+//            // cobertura doesn't support including / excluding according to source files
+//            def includeOnlyJavaFiles = {
+//                def includedClasses = findJavaFiles(project).collect { path ->
+//                    ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
+//                }
+//
+//                cobertura {
+//                    if (includedClasses.size == 0) {
+//                        coverageExcludes = [".*"]
+//                    } else {
+//                        coverageIncludes = includedClasses
+//                    }
+//                }
+//            }
+//            includeOnlyJavaFiles()
+//        }
+//    }
+//}
+//
+//
+//
