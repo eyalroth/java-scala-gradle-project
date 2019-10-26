@@ -3,9 +3,9 @@
 // otherwise "reportScoverage" might fail due to a bug in scoverage which causes problems with encoding
 // See https://github.com/scoverage/gradle-scoverage/issues/68
 
-apply plugin: "org.scoverage"
-
-scoverage {
-    excludedFiles = [".*\\.java"]
-    minimumRate = 0.75
-}
+//apply plugin: "org.scoverage"
+//
+//scoverage {
+//    excludedFiles = [".*\\.java"]
+//    minimumRate = 0.75
+//}
