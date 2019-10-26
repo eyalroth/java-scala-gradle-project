@@ -2,7 +2,7 @@ plugins {
     id "net.rdrei.android.buildtimetracker" version "0.11.0" apply false // https://github.com/passy/build-time-tracker-plugin
     id 'com.github.johnrengelman.shadow' version '4.0.3' apply false // https://github.com/johnrengelman/shadow
     id "com.palantir.git-version" version "0.10.0" apply false // https://github.com/palantir/gradle-git-version
-    id "com.jfrog.artifactory" version "4.8.1" apply false
+    id "com.jfrog.artifactory" version "4.10.0" apply false
     id "org.scoverage" version "3.2.0" apply false // https://github.com/scoverage/gradle-scoverage
     id "net.saliman.cobertura" version "2.6.1" apply false // https://github.com/stevesaliman/gradle-cobertura-plugin
 }
@@ -26,7 +26,7 @@ subprojects { p ->
         applyFile("java")
         applyFile("test")
         dependencies {
-            api platform(project(':dependencies'))
+            implementation platform(project(':dependencies'))
         }
     }
 }
