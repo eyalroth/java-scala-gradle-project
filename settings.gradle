@@ -1,5 +1,6 @@
 rootProject.name = 'java-scala-gradle-project'
 
+include 'dependencies'
 include 'server'
 include 'client'
 include 'common'

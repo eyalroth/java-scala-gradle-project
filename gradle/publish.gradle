@@ -1,16 +1,13 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'java-library'
 
 artifactory {
-
     contextUrl = 'http://localhost:8081/artifactory'
-
     publish {
         repository {
             repoKey = 'libs-release-local'
-            username = "admin"
-            password = "password"
+            username = 'admin'
+            password = 'password'
         }
     }
 }
@@ -36,64 +33,43 @@ task docsJar(type: Jar) {
 docsJar.dependsOn(javadoc)
 
 pluginManager.withPlugin('scala') {
-
     javadoc {
         enabled = false
     }
-
     docsJar {
         from scaladoc.destinationDir
     }
     docsJar.dependsOn(scaladoc)
 }
 
+// There's no way to exclude files with `from components.java`, therefore the use of `artifact apiJar`.
+// On the other hand, `artifact apiJar` doesn't generate an appropriate POM, so this configuration makes sure to copy
+// the POM from an internal publication that uses `from components.java`.
+// see https://stackoverflow.com/a/53486063/114626
 publishing {
+    publications {
+        def pomString = null
 
-    def configurePom = { publication ->
-        configure(publication) {
+        internal(MavenPublication) {
+            from components.java
             pom.withXml {
-                def rootNode = asNode()
-
-                def allDependencies = project.configurations.runtime.allDependencies +
-                        project.configurations.api.allDependencies
-                def dependenciesNode = rootNode.appendNode("dependencies")
-
-
-                // this adds inner-project dependencies to the published POM, since `artifact apiJar` doesn't do that.
-                // this could usually be achieved with `from components.java`, but that would include ALL files,
-                // including sensitive resources files which you may want to exclude via `artifact apiJar`.
-                // see https://stackoverflow.com/a/53486063/114626
-                allDependencies.forEach { d ->
-
-                    def dependencyNode = dependenciesNode.appendNode("dependency")
-                    dependencyNode.appendNode("groupId", d.group)
-                    dependencyNode.appendNode("artifactId", d.name)
-                    def version = {
-                        if (d.version != null) d.version
-                        else dependencyManagement.managedVersions["${d.group}:${d.name}"]
-                    }
-                    dependencyNode.appendNode("version", version())
-                }
-
-
-                // remove the "dependencyManagement" node as it is irrelevant in the published POM
-                rootNode.getByName("dependencyManagement").forEach { node ->
-                    rootNode.remove(node)
-                }
+                pomString = asString().toString()
             }
         }
-    }
 
-    publications {
         api(MavenPublication) {
             artifact apiJar
             artifact sourcesJar
             artifact docsJar
+            pom.withXml {
+                def builder = asString()
+                builder.delete(0, builder.length())
+                builder.append(pomString)
+            }
         }
-        configurePom(api)
     }
 }
-
+generatePomFileForApiPublication.dependsOn(generatePomFileForInternalPublication)
 
 artifactoryPublish {
     publications('api')
