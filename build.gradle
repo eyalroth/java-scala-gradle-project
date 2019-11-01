@@ -20,13 +20,3 @@ configure(this) {
     applyFile("buildtimes")
     applyFile("coverage")
 }
-
-subprojects { p ->
-    if (p.name != "dependencies") {
-        applyFile("java")
-        applyFile("test")
-        dependencies {
-            implementation platform(project(':dependencies'))
-        }
-    }
-}

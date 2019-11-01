@@ -8,13 +8,16 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    implementation platform(project(':dependencies'))
+
     testCompileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api'
     testCompileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
 }
 
-gradle.projectsEvaluated {
+applyFile("test")
 
+gradle.projectsEvaluated {
     tasks.withType(Test) { task ->
         include '**/*Test.class'
         include '**/*Tests.class'

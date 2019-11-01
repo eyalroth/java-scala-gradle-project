@@ -1,5 +1,6 @@
 description = 'common - the common module for all the others'
 
+applyFile('java')
 applyFile('scala')
 
 configurations {

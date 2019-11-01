@@ -1,13 +1,13 @@
 description = 'server - a mixed scala / java module'
 
-applyFile("publish")
+applyFile('java')
+applyFile('scala')
 
 dependencies {
     implementation project(":common")
     implementation group: 'com.google.guava', name: 'guava'
 }
 
-applyFile("scala")
-
-applyFile("app")
+applyFile('publish')
+applyFile('app')
 configureApp('server', 'org.myproject.server.ServerHelloWorld')
