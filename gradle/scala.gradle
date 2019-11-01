@@ -1,3 +1,4 @@
+apply plugin: 'java-library'
 apply plugin: 'scala'
 
 // A way to make Java code able to import Scala code (doesn't work by default)
@@ -11,6 +12,8 @@ configureSources(sourceSets.test, 'test')
 applyFile("scoverage")
 
 dependencies {
+    implementation platform(project(':dependencies'))
+
     api group: 'org.scala-lang', name: 'scala-library'
 
     // using "vintage" junit engine (junit 4) since scalatest doesn't support junit 5
@@ -22,8 +25,9 @@ dependencies {
     zinc group: 'org.scala-lang', name: 'scala-library', version: '2.10.5'
 }
 
-gradle.projectsEvaluated {
+applyFile("test")
 
+gradle.projectsEvaluated {
     tasks.withType(Test) { task ->
         include '**/*ModuleSuite.class'
     }
