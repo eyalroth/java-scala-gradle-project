@@ -6,12 +6,12 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: "com.palantir.git-version"
 
-ext.configureApp = { archiveBaseName, mainClass ->
+ext.configureApp = { baseName, mainClass ->
 
     mainClassName = mainClass
 
     shadowJar {
-        archiveName = "${archiveBaseName}.jar"
+        archiveFileName = "${baseName}.jar"
 
         def buildNumber = {
             if (System.env.containsKey("BUILD_NUMBER")) System.env.get("BUILD_NUMBER") else "unspecified"
@@ -31,10 +31,10 @@ ext.configureApp = { archiveBaseName, mainClass ->
     }
 
     shadowDistZip {
-        baseName = archiveBaseName
+        archiveBaseName = baseName
     }
     shadowDistTar {
-        baseName = archiveBaseName
+        archiveBaseName = baseName
     }
 
     def distTask = tasks.create(name: 'shadowDist')
