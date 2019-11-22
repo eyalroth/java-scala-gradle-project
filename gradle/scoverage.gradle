@@ -1,11 +1,6 @@
-// scoverage only works with setting the environment variable:
-// `JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8`
-// otherwise "reportScoverage" might fail due to a bug in scoverage which causes problems with encoding
-// See https://github.com/scoverage/gradle-scoverage/issues/68
+apply plugin: "org.scoverage"
 
-//apply plugin: "org.scoverage"
-//
-//scoverage {
-//    excludedFiles = [".*\\.java"]
-//    minimumRate = 0.75
-//}
+scoverage {
+    excludedFiles = [".*\\.java"]
+    minimumRate = 0.75
+}
