@@ -21,7 +21,6 @@ gradle.projectsEvaluated {
     /* --- total aggregation --- */
 
     task testCoverage(type: GradleBuild) {
-//        tasks = ['cobertura', 'aggregateScoverage']
-        tasks = ['cobertura']
+        tasks = ['cobertura', 'aggregateScoverage']
     }
 }
