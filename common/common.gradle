@@ -19,6 +19,6 @@ sourceSets {
         scala {
             srcDir "src/test-utils/scala"
         }
-        compileClasspath += configurations.testUtilsCompile
+        compileClasspath += configurations.testUtilsCompileClasspath
     }
 }

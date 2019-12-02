@@ -19,10 +19,6 @@ dependencies {
     // using "vintage" junit engine (junit 4) since scalatest doesn't support junit 5
     testCompileOnly group: 'org.scalatest', name: 'scalatest_2.12'
     testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine'
-
-    // see: https://github.com/typesafehub/zinc/issues/87
-    zinc group: 'com.typesafe.zinc', name: 'zinc', version: '0.3.15'
-    zinc group: 'org.scala-lang', name: 'scala-library', version: '2.10.5'
 }
 
 applyFile("test")
