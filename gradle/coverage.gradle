@@ -3,11 +3,11 @@ applyFile("cobertura")
 
 gradle.projectsEvaluated {
 
+    /* --- cobertura aggregation --- */
+
     def coberturaProjects = subprojects.findAll {
         it.getPlugins().hasPlugin('net.saliman.cobertura')
     }
-
-    /* --- cobertura aggregation --- */
 
     // taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10
     def files = coberturaProjects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
@@ -16,7 +16,7 @@ gradle.projectsEvaluated {
         coverageSourceDirs = coberturaProjects.sourceSets.main.allSource.srcDirs.flatten()
         coverageMergeDatafiles = files
     }
-    test.dependsOn(coberturaProjects.test)
+    project.tasks.cobertura.dependsOn(coberturaProjects.test)
 
     /* --- total aggregation --- */
 
