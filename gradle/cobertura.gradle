@@ -8,7 +8,7 @@ cobertura {
 
 dependencies {
     // otherwise will get ClassNotFoundException (see https://github.com/stevesaliman/gradle-cobertura-plugin/issues/89)
-    testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
+    testRuntimeOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
 }
 
 if (project != rootProject) {
