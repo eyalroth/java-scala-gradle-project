@@ -1,0 +1,13 @@
+description = 'a mixed java / scala module'
+
+applyFile('java')
+applyFile('scala')
+
+dependencies {
+    implementation project(":common")
+    implementation group: 'com.google.guava', name: 'guava'
+}
+
+applyFile('publish')
+applyFile('app')
+configureApp('mix-java-scala', 'org.myproject.mix.MixJavScalaHelloWorld')

@@ -1,10 +1,10 @@
 rootProject.name = 'java-scala-gradle-project'
 
 include 'dependencies'
-include 'server'
-include 'client'
 include 'common'
-include 'analytics'
+include 'java-only'
+include 'scala-only'
+include 'mix-java-scala'
 
 // Makes every sub-project have its `build.gradle` named after its name
 ext.configureSubProject = { project ->

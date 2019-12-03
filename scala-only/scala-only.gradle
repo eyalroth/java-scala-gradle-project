@@ -1,0 +1,11 @@
+description = 'a scala only module'
+
+applyFile("scala")
+
+dependencies {
+    implementation project(":common")
+    implementation group: 'io.spray', name: 'spray-json_2.12'
+}
+
+applyFile("app")
+configureApp('scala-only', 'org.myproject.scalaonly.ScalaOnlyHelloWorld')
