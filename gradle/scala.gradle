@@ -17,7 +17,7 @@ dependencies {
     api group: 'org.scala-lang', name: 'scala-library'
 
     // using "vintage" junit engine (junit 4) since scalatest doesn't support junit 5
-    testCompileOnly group: 'org.scalatest', name: 'scalatest_2.12'
+    testCompileOnly group: 'org.scalatest', name: "scalatest_${scalaVersionMajor}"
     testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine'
 }
 

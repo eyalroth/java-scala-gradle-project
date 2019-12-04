@@ -11,7 +11,7 @@ dependencies {
     testUtilsCompile platform(project(':dependencies'))
     testUtilsCompile sourceSets.main.runtimeClasspath
     testUtilsCompile group: 'org.junit.platform', name: 'junit-platform-runner'
-    testUtilsCompile group: 'org.scalatest', name: 'scalatest_2.12'
+    testUtilsCompile group: 'org.scalatest', name: "scalatest_${scalaVersionMajor}"
 }
 
 sourceSets {

@@ -4,7 +4,7 @@ applyFile("scala")
 
 dependencies {
     implementation project(":common")
-    implementation group: 'io.spray', name: 'spray-json_2.12'
+    implementation group: 'io.spray', name: "spray-json_${scalaVersionMajor}"
 }
 
 applyFile("app")
