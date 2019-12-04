@@ -11,32 +11,28 @@ dependencies {
     testRuntimeOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10'
 }
 
-if (project != rootProject) {
-    pluginManager.withPlugin('scala') {
+pluginManager.withPlugin('scala') {
+    cobertura {
+        // by default, cobertura looks only for the "java" output directory (missing "scala")
+        coverageDirs = [sourceSets.main.output.classesDirs]
+    }
 
-        cobertura {
-            // by default, cobertura looks only for the "java" output directory (missing "scala")
-            coverageDirs = [sourceSets.main.output.classesDirs]
-        }
+    project.afterEvaluate {
+        // cobertura doesn't support including / excluding according to source files
+        def includeOnlyJavaFiles = {
+            def includedClasses = findJavaFiles(project).collect { path ->
+                ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
+            }
 
-        project.afterEvaluate {
-
-            // cobertura doesn't support including / excluding according to source files
-            def includeOnlyJavaFiles = {
-                def includedClasses = findJavaFiles(project).collect { path ->
-                    ".*" + path.take(path.lastIndexOf('.')).replace('/', '\\.') + '(\\$.*)?$'
-                }
-
-                cobertura {
-                    if (includedClasses.size == 0) {
-                        coverageExcludes = [".*"]
-                    } else {
-                        coverageIncludes = includedClasses
-                    }
+            cobertura {
+                if (includedClasses.size == 0) {
+                    coverageExcludes = [".*"]
+                } else {
+                    coverageIncludes = includedClasses
                 }
             }
-            includeOnlyJavaFiles()
         }
+        includeOnlyJavaFiles()
     }
 }
 
