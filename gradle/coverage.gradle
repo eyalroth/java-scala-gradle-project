@@ -1,26 +1,34 @@
 applyFile("scoverage")
 applyFile("cobertura")
 
+/* --- cobertura aggregation --- */
+
 gradle.projectsEvaluated {
-
-    /* --- cobertura aggregation --- */
-
     def coberturaProjects = subprojects.findAll {
         it.getPlugins().hasPlugin('net.saliman.cobertura')
     }
 
     // taken from https://github.com/stevesaliman/gradle-cobertura-plugin/issues/10
-    def files = coberturaProjects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
+    def files = coberturaProjects.collect { new File(it.buildDir, '/cobertura/cobertura.ser') }
     cobertura {
         coverageFormats = ['xml', 'html']
         coverageSourceDirs = coberturaProjects.sourceSets.main.allSource.srcDirs.flatten()
         coverageMergeDatafiles = files
     }
-    project.tasks.cobertura.dependsOn(coberturaProjects.test)
+    project.tasks.generateCoberturaReport.dependsOn(coberturaProjects.tasks.cobertura)
+}
 
-    /* --- total aggregation --- */
+/* --- total aggregation --- */
 
-    task testCoverage(type: GradleBuild) {
-        tasks = ['cobertura', 'aggregateScoverage']
+project.afterEvaluate {
+    gradle.projectsEvaluated {
+        task coverage {
+            description = 'Test coverage for the entire project'
+            group = 'verification'
+            dependsOn(project.tasks.cobertura)
+            dependsOn(project.tasks.aggregateScoverage)
+        }
     }
 }
+
+
