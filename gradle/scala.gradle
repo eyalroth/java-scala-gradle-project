@@ -25,6 +25,6 @@ applyFile("test")
 
 gradle.projectsEvaluated {
     tasks.withType(Test) { task ->
-        include '**/*ModuleSuite.class'
+        include '**/*Suite.class'
     }
 }
