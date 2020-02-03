@@ -1,8 +1,6 @@
 package org.myproject.mix
 
-import org.scalatest.FunSuite
-
-class SingerSuite extends FunSuite {
+class SingerSuite extends munit.FunSuite {
 
   test("sing") {
 

@@ -1,8 +1,6 @@
 package org.myproject.mix
 
-import org.scalatest.FunSuite
-
-class GreeterSuite extends FunSuite {
+class GreeterSuite extends munit.FunSuite {
 
   test("greet world") {
 

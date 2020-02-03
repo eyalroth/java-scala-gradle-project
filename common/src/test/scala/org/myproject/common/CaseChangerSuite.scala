@@ -1,8 +1,6 @@
 package org.myproject.common
 
-import org.scalatest.FunSuite
-
-class CaseChangerSuite extends FunSuite {
+class CaseChangerSuite extends munit.FunSuite {
 
   test("toLowerCase") {
 
